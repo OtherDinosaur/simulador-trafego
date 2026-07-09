@@ -1,5 +1,7 @@
 #include "estado.h"
 #include "carros.h"
+#include "mapa.h"
+#include "semaforo.h"
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,7 +37,7 @@ void *threadCarro(void *arg) {
 }
 
 void anda_carro(Carro *carro) {
-
+    
     Estado *estado = carro->estado;
     int novaLin = carro->lin;
     int novaCol = carro->col;
@@ -54,11 +56,20 @@ void anda_carro(Carro *carro) {
     } else if (carro->direcao == 22) {
         novaLin++;
     }
-    
+
     if (novaLin >= LINHAS - 1 || novaCol >= COLUNAS - 1 || novaLin <= 1 || novaCol <= 1) {
         printf("Carro %d saiu do mapa!\n", carro->id);
         carro->id = -1; // Marca o carro como removido
         pthread_mutex_unlock(&estado->ocupacao[carro->lin][carro->col]);
+    }
+    Semaforo *sem = buscaSemaforo(estado, novaLin, novaCol);
+
+    int horizontal = (carro->direcao / 10 == 1);
+
+    if (sem != NULL && sem->cor == 1 && horizontal) {
+        return;
+    } else if (sem != NULL && sem->cor == 0 && !horizontal) {
+        return;
     }
 
     if (pthread_mutex_trylock(&estado->ocupacao[novaLin][novaCol]) == 0) {

@@ -55,6 +55,7 @@ int main(void)
     pthread_t veiculos[15]; // para threads dos carros
 
     inicializa_mapa();
+    inicializaSemaforos(&estado);
     
     pthread_create(&relogio, NULL, threadRelogio, &estado);
 

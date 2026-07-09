@@ -12,7 +12,7 @@ extern char mapa[LINHAS][COLUNAS];
 
 void inicializa_mapa();
 
-void imprime_tela();
+void imprime_tela(char tela[LINHAS][COLUNAS], Carro carros[], int n);
 
 
 #endif

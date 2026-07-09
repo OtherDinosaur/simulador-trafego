@@ -4,6 +4,9 @@
 #include <unistd.h>
 #include "carros.h"
 #include "mapa.h"
+#include "semaforo.h"
+#include "estado.h"
+#include <pthread.h>
 
 char mapa[LINHAS][COLUNAS];
 
@@ -65,11 +68,11 @@ void imprime_tela(char tela[LINHAS][COLUNAS], Carro carros[], int n) {
         for (j = 0; j < COLUNAS; j++) {
             tela[i][j] = mapa[i][j];
         }
+    }
     for (int i = 0; i < n; i++)
     {
         if (carros[i].id != -1)
             tela[carros[i].lin][carros[i].col] = 'C';
-    }
     }
     for (i = 0; i < LINHAS; i++) {
         for (j = 0; j < COLUNAS; j++) {
