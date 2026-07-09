@@ -35,9 +35,9 @@ int main(void)
     carros[1].estado = &estado;
 
     carros[2].id = 3;
-    carros[2].lin = 1;
-    carros[2].col = 20;
-    carros[2].direcao = 22;
+    carros[2].lin = 5;
+    carros[2].col = 50;
+    carros[2].direcao = 12;
     carros[2].velocidade = 4;
     carros[2].Ambulancia = 0;
     carros[2].thread = 0;
@@ -46,6 +46,11 @@ int main(void)
     pthread_mutex_init(&estado.mutexTick, NULL);
     pthread_cond_init(&estado.condTick, NULL);
     pthread_mutex_init(&estado.mutexMapa, NULL);
+    for (int i = 0; i < LINHAS; i++) {
+        for (int j = 0; j < COLUNAS; j++) {
+            pthread_mutex_init(&estado.ocupacao[i][j], NULL);
+        }
+    }
     pthread_t relogio;
     pthread_t veiculos[15]; // para threads dos carros
 
@@ -55,6 +60,7 @@ int main(void)
 
     //pthread_create(&veiculos[0], NULL, threadCarro, &carros[0]);
     for (int i = 0; i < 3; i++) {
+        pthread_mutex_lock(&estado.ocupacao[carros[i].lin][carros[i].col]);
         pthread_create(&veiculos[i], NULL, threadCarro, &carros[i]);
     }
     

@@ -22,8 +22,9 @@ void *threadCarro(void *arg) {
         ultimoTick = estado->tick;
         pthread_mutex_unlock(&estado->mutexTick);
         
-        if (estado->tick % carro->velocidade == 0) {    
-            pthread_mutex_lock(&estado->mutexMapa);       
+        if (ultimoTick % carro->velocidade == 0) {
+            
+            pthread_mutex_lock(&estado->mutexMapa);
             anda_carro(carro);
             pthread_mutex_unlock(&estado->mutexMapa);
         }
@@ -34,21 +35,35 @@ void *threadCarro(void *arg) {
 }
 
 void anda_carro(Carro *carro) {
+
+    Estado *estado = carro->estado;
+    int novaLin = carro->lin;
+    int novaCol = carro->col;
+
     if (carro->id == -1) {
         return;
     }
+
+
     if (carro->direcao == 11) {
-        carro->col++;
+        novaCol++;
     } else if (carro->direcao == 12) {
-        carro->col--;
+        novaCol--;
     } else if (carro->direcao == 21) {
-        carro->lin--;
+        novaLin--;
     } else if (carro->direcao == 22) {
-        carro->lin++;
+        novaLin++;
     }
-    if (carro->lin >= LINHAS - 1 || carro->col >= COLUNAS - 1 || carro->lin <= 1 || carro->col <= 1) {
+    
+    if (novaLin >= LINHAS - 1 || novaCol >= COLUNAS - 1 || novaLin <= 1 || novaCol <= 1) {
         printf("Carro %d saiu do mapa!\n", carro->id);
         carro->id = -1; // Marca o carro como removido
-        
+        pthread_mutex_unlock(&estado->ocupacao[carro->lin][carro->col]);
+    }
+
+    if (pthread_mutex_trylock(&estado->ocupacao[novaLin][novaCol]) == 0) {
+        pthread_mutex_unlock(&estado->ocupacao[carro->lin][carro->col]);
+        carro->lin = novaLin;
+        carro->col = novaCol;
     }
 }
