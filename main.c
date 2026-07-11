@@ -5,6 +5,7 @@
 #include "carros.h"
 #include "relogio.h"
 #include "estado.h"
+#include "inicializador.h"
 
 
 char tela[LINHAS][COLUNAS];
@@ -12,36 +13,8 @@ char tela[LINHAS][COLUNAS];
 int main(void)
 {
     Estado estado;
-    Carro carros[15];
+    Carro carros[NUM_CARROS];
     estado.tick = 0;
-
-
-    carros[0].id = 1;
-    carros[0].lin = 4;
-    carros[0].col = 4;
-    carros[0].direcao = 11;
-    carros[0].velocidade = 2;
-    carros[0].Ambulancia = 0;
-    carros[0].thread = 0;
-    carros[0].estado = &estado;
-
-    carros[1].id = 2;
-    carros[1].lin = 5;
-    carros[1].col = 65;
-    carros[1].direcao = 12;
-    carros[1].velocidade = 1;
-    carros[1].Ambulancia = 0;
-    carros[1].thread = 0;
-    carros[1].estado = &estado;
-
-    carros[2].id = 3;
-    carros[2].lin = 5;
-    carros[2].col = 50;
-    carros[2].direcao = 12;
-    carros[2].velocidade = 4;
-    carros[2].Ambulancia = 0;
-    carros[2].thread = 0;
-    carros[2].estado = &estado;
 
     pthread_mutex_init(&estado.mutexTick, NULL);
     pthread_cond_init(&estado.condTick, NULL);
@@ -56,13 +29,14 @@ int main(void)
 
     inicializa_mapa();
     inicializaSemaforos(&estado);
-    
+    inicializaVeiculos(carros, &estado);
     pthread_create(&relogio, NULL, threadRelogio, &estado);
 
     //pthread_create(&veiculos[0], NULL, threadCarro, &carros[0]);
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < NUM_CARROS; i++) {
         pthread_mutex_lock(&estado.ocupacao[carros[i].lin][carros[i].col]);
         pthread_create(&veiculos[i], NULL, threadCarro, &carros[i]);
+        pthread_mutex_unlock(&estado.ocupacao[carros[i].lin][carros[i].col]);
     }
     
 
@@ -77,7 +51,7 @@ int main(void)
     while (1) {
         printf("\033[H");
         pthread_mutex_lock(&estado.mutexMapa);
-        imprime_tela(tela, carros, 3);
+        imprime_tela(tela, carros, NUM_CARROS);
         pthread_mutex_unlock(&estado.mutexMapa);
         usleep(REFRESH_US);
     }

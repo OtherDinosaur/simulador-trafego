@@ -28,9 +28,9 @@ void *threadRelogio(void *arg) {
         }
         char *mensagem;
         if (estado->semaforo[0].cor == 0) {
-            mensagem = "semaforos agora estão verdes para horizontal\n";
+            mensagem = "semaforos agora estão verdes para horizontal <->\n";
         } else {
-            mensagem = "semaforos agora estão verdes para vertical\n";
+            mensagem = "semaforos agora estão verdes para vertical ^v   \n";
         }
         printf("%s", mensagem);
         

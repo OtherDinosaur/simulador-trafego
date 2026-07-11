@@ -66,12 +66,15 @@ void anda_carro(Carro *carro) {
 
     int horizontal = (carro->direcao / 10 == 1);
 
-    if (sem != NULL && sem->cor == 1 && horizontal) {
-        return;
-    } else if (sem != NULL && sem->cor == 0 && !horizontal) {
-        return;
+    if (!carro->ambulancia){
+        if (sem != NULL && sem->cor == 1 && horizontal) {
+            return;
+        } else if (sem != NULL && sem->cor == 0 && !horizontal) {
+            return;
+        }
     }
 
+ 
     if (pthread_mutex_trylock(&estado->ocupacao[novaLin][novaCol]) == 0) {
         pthread_mutex_unlock(&estado->ocupacao[carro->lin][carro->col]);
         carro->lin = novaLin;

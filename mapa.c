@@ -72,7 +72,12 @@ void imprime_tela(char tela[LINHAS][COLUNAS], Carro carros[], int n) {
     for (int i = 0; i < n; i++)
     {
         if (carros[i].id != -1)
-            tela[carros[i].lin][carros[i].col] = 'C';
+            if (carros[i].ambulancia){
+                tela[carros[i].lin][carros[i].col] = 'A';
+            } else {
+                tela[carros[i].lin][carros[i].col] = 'C';
+            }
+
     }
     for (i = 0; i < LINHAS; i++) {
         for (j = 0; j < COLUNAS; j++) {

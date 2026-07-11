@@ -10,7 +10,7 @@ typedef struct Carro {
     int col;
     int direcao; // 1X -> horizontal, 2X -> vertical, X1 -> direita/cima, X2 -> esquerda/baixo
     int velocidade; // 1, 2 ou 4 ticks
-    int Ambulancia;
+    int ambulancia;
     pthread_t thread;
     Estado *estado;
 } Carro;
