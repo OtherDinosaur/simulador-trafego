@@ -67,10 +67,12 @@ void anda_carro(Carro *carro) {
     int horizontal = (carro->direcao / 10 == 1);
 
     if (!carro->ambulancia){
-        if (sem != NULL && sem->cor == 1 && horizontal) {
-            return;
-        } else if (sem != NULL && sem->cor == 0 && !horizontal) {
-            return;
+        if (!(sem != NULL && sem->lin == carro->lin && sem->col == carro->col)) {
+            if (sem != NULL && sem->cor == 1 && horizontal) {
+                return;
+            } else if (sem != NULL && sem->cor == 0 && !horizontal) {
+                return;
+            }
         }
     }
 
