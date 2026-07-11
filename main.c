@@ -25,7 +25,7 @@ int main(void)
         }
     }
     pthread_t relogio;
-    pthread_t veiculos[15]; // para threads dos carros
+    pthread_t veiculos[NUM_CARROS]; // para threads dos carros
 
     inicializa_mapa();
     inicializaSemaforos(&estado);
@@ -36,17 +36,7 @@ int main(void)
     for (int i = 0; i < NUM_CARROS; i++) {
         pthread_mutex_lock(&estado.ocupacao[carros[i].lin][carros[i].col]);
         pthread_create(&veiculos[i], NULL, threadCarro, &carros[i]);
-        pthread_mutex_unlock(&estado.ocupacao[carros[i].lin][carros[i].col]);
     }
-    
-
-    /*pthread_join(relogio, NULL);
-
-    for (int i = 0; i < 15; i++) {
-        pthread_join(veiculos[i], NULL);
-    }*/
-
-
     
     while (1) {
         printf("\033[H");
